@@ -47,18 +47,114 @@ public class NormalForm {
 		return ((isAtom(left) || isConjunctionOfAtoms(left)) && (isAtom(right) || isDisjunctionOfAtoms(right)));
 	}
 
+	/**
+	 * subclass(atom, exists property atom)
+	 * 
+	 * @param left
+	 * @param right
+	 * @return
+	 */
 	public static boolean typeTwoSubClassAxiom(OWLClassExpression left, OWLClassExpression right) {
 		return (isAtom(left) && isExistentialOfAtom(right));
 	}
+	
+	/**
+	 * subclass(atom, exists dataproperty atom)
+	 * 
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static boolean typeTwoDataSubClassAxiom(OWLClassExpression left, OWLClassExpression right) {
+		return (isAtom(left) && isExistentialOfData(right));
+	}
+	
+	/**
+	 * subclass(atom, mincardinality property atom)
+	 */
+	public static boolean typeTwoMinCardAxiom(OWLClassExpression left, OWLClassExpression right) {
+		return (isAtom(left) && isMinCardinalityOfAtom(right));
+	}
+	
+	/**
+	 * subclass(atom, maxcardinality property atom)
+	 */
+	public static boolean typeTwoMaxCardAxiom(OWLClassExpression left, OWLClassExpression right) {
+		return (isAtom(left) && isMaxCardinalityOfAtom(right));
+	}
 
+	/**
+	 * subclass(atom, exactcardinality property atom)
+	 */
+	public static boolean typeTwoExactCardAxiom(OWLClassExpression left, OWLClassExpression right) {
+		return (isAtom(left) && isExactCardinalityOfAtom(right));
+	}
+	
+	/**
+	 * subclass(atom, mincardinality dataproperty atom)
+	 */
+	public static boolean typeTwoDataMinCardAxiom(OWLClassExpression left, OWLClassExpression right) {
+		return (isAtom(left) && isDataMinCardinalityOfAtom(right));
+	}
+	
+	/**
+	 * subclass(atom, maxcardinality dataproperty atom)
+	 */
+	public static boolean typeTwoDataMaxCardAxiom(OWLClassExpression left, OWLClassExpression right) {
+		return (isAtom(left) && isDataMaxCardinalityOfAtom(right));
+	}
+	
+	/**
+	 * subclass(atom, exactcardinality dataproperty atom)
+	 */
+	public static boolean typeTwoDataExactCardAxiom(OWLClassExpression left, OWLClassExpression right) {
+		return (isAtom(left) && isDataExactCardinalityOfAtom(right));
+	}
+
+	/**
+	 * subclass(atom, forall property atom)
+	 * @param left
+	 * @param right
+	 * @return
+	 */
 	public static boolean typeThreeSubClassAxiom(OWLClassExpression left, OWLClassExpression right) {
 		return (isAtom(left) && isUniversalOfAtom(right));
 	}
+	
+	/**
+	 * subclass(atom, forall dataproperty atom)
+	 * 
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static boolean typeThreeDataSubClassAxiom(OWLClassExpression left, OWLClassExpression right) {
+		return (isAtom(left) && isUniversalOfData(right));
+	}
 
+	/**
+	 * sublcass(exists property atom, atom)
+	 * 
+	 * @param left
+	 * @param right
+	 * @return
+	 */
 	public static boolean typeFourSubClassAxiom(OWLClassExpression left, OWLClassExpression right) {
 		return (isExistentialOfAtom(left) && isAtom(right));
 	}
 
+	/**
+	 * sublcass(exists dataproperty atom, atom)
+	 * 
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static boolean typeFourDataSubClassAxiom(OWLClassExpression left, OWLClassExpression right) {
+		return (isExistentialOfData(left) && isAtom(right));
+	}
+
+	
 	public static boolean isAtom(OWLClassExpression e) {
 		return e.isOWLClass() || e.isTopEntity() || e.isBottomEntity();
 	}
@@ -110,10 +206,163 @@ public class NormalForm {
 		}
 		return true;
 	}
+	
+	/**
+	 * Data Some Values From expression
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isExistentialOfData(OWLClassExpression e) {
+		if (!(e.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM)) {
+			return false;
+		}
+
+		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+
+		if (!isAtom(filler)) {
+			return false;
+		}
+		return true;
+	}
+	
+
+	/**
+	 * Object Min Cardinality Expression
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isMinCardinalityOfAtom(OWLClassExpression e) {
+		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY)) {
+			return false;
+		}
+
+		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+
+		if (!isAtom(filler)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Object Max Cardinality Expression
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isMaxCardinalityOfAtom(OWLClassExpression e) {
+		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_MAX_CARDINALITY)) {
+			return false;
+		}
+
+		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+
+		if (!isAtom(filler)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Object Exact Cardinality Expression
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isExactCardinalityOfAtom(OWLClassExpression e) {
+		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY)) {
+			return false;
+		}
+
+		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+
+		if (!isAtom(filler)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Data Min Cardinality Expression
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isDataMinCardinalityOfAtom(OWLClassExpression e) {
+		if (!(e.getClassExpressionType() == ClassExpressionType.DATA_MIN_CARDINALITY)) {
+			return false;
+		}
+
+		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+
+		if (!isAtom(filler)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Data Max Cardinality Expression
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isDataMaxCardinalityOfAtom(OWLClassExpression e) {
+		if (!(e.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY)) {
+			return false;
+		}
+
+		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+
+		if (!isAtom(filler)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Data Exact Cardinality Expression
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isDataExactCardinalityOfAtom(OWLClassExpression e) {
+		if (!(e.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY)) {
+			return false;
+		}
+
+		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+
+		if (!isAtom(filler)) {
+			return false;
+		}
+		return true;
+	}
 
 	@SuppressWarnings("unchecked")
 	public static boolean isUniversalOfAtom(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_ALL_VALUES_FROM)) {
+			return false;
+		}
+
+		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+
+		if (!isAtom(filler)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Data All Values From Expression
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isUniversalOfData(OWLClassExpression e) {
+		if (!(e.getClassExpressionType() == ClassExpressionType.DATA_ALL_VALUES_FROM)) {
 			return false;
 		}
 
