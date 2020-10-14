@@ -63,15 +63,15 @@ public class NormalForm {
 		return e.isOWLClass() || e.isTopEntity() || e.isBottomEntity();
 	}
 
-	static boolean isTypeAAtom(OWLClassExpression e) {
+	public static boolean isTypeAAtom(OWLClassExpression e) {
 		return e.isOWLClass() || e.isTopEntity();
 	}
 
-	static boolean isTypeBAtom(OWLClassExpression e) {
+	public static boolean isTypeBAtom(OWLClassExpression e) {
 		return e.isOWLClass() || e.isBottomEntity();
 	}
 
-	static boolean isConjunctionOfAtoms(OWLClassExpression e) {
+	public static boolean isConjunctionOfAtoms(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF)) {
 			return false;
 		}
@@ -84,7 +84,7 @@ public class NormalForm {
 		return true;
 	}
 
-	static boolean isDisjunctionOfAtoms(OWLClassExpression e) {
+	public static boolean isDisjunctionOfAtoms(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF)) {
 			return false;
 		}
@@ -98,7 +98,7 @@ public class NormalForm {
 	}
 
 	@SuppressWarnings("unchecked")
-	static boolean isExistentialOfAtom(OWLClassExpression e) {
+	public static boolean isExistentialOfAtom(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM)) {
 			return false;
 		}
@@ -112,7 +112,7 @@ public class NormalForm {
 	}
 
 	@SuppressWarnings("unchecked")
-	static boolean isUniversalOfAtom(OWLClassExpression e) {
+	public static boolean isUniversalOfAtom(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_ALL_VALUES_FROM)) {
 			return false;
 		}

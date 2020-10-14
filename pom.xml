@@ -2,12 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>ontologyutils</groupId>
-  <artifactId>ontologyutils</artifactId>
+  <groupId>ontologyutils-viz</groupId>
+  <artifactId>ontologyutils-viz</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>ontologyutils</name>
+  <name>ontologyutils-viz</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,16 +17,18 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
+        <version>3.8.0</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>11</source>
+          <target>11</target>
         </configuration>
       </plugin>
+   
     </plugins>
   </build>
   
   <dependencies>
+ 
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -36,7 +38,13 @@
     <dependency>
   		<groupId>net.sourceforge.owlapi</groupId>
   		<artifactId>owlapi-distribution</artifactId>
-  		<version>5.1.9</version>
+  		<version>5.1.2</version>
+  		    		<exclusions>
+    			<exclusion>
+    				<groupId>com.github.jsonld-java</groupId>
+    				<artifactId>jsonld-java</artifactId>
+    			</exclusion>
+    		</exclusions>
   	</dependency>
   	<dependency>
   		<groupId>net.sourceforge.owlapi</groupId>
@@ -53,5 +61,10 @@
   		<artifactId>org.semanticweb.hermit</artifactId>
   		<version>1.3.8.510</version>
   	</dependency>
+  	<dependency>
+    <groupId>com.github.jsonld-java</groupId>
+    <artifactId>jsonld-java</artifactId>
+    <version>0.13.0</version>
+    </dependency>
   </dependencies>
 </project>

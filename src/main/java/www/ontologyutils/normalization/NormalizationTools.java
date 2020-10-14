@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.ClassExpressionType;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -21,6 +22,7 @@ import org.semanticweb.owlapi.model.OWLFunctionalObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLObjectComplementOf;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiomShortCut;
 
@@ -36,6 +38,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLObjectSomeValuesFromImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectUnionOfImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLQuantifiedRestrictionImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLSubClassOfAxiomImpl;
+
 import www.ontologyutils.toolbox.AnnotateOrigin;
 import www.ontologyutils.toolbox.FreshAtoms;
 
@@ -314,7 +317,7 @@ public class NormalizationTools {
 					&& !NormalForm.isUniversalOfAtom(right)) { // right universal atom is fine
 				// right = forall property filler
 				OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) right).getFiller();
-				OWLObjectPropertyExpression property = ((OWLObjectSomeValuesFrom) right).getProperty();
+				OWLObjectPropertyExpression property = ((OWLObjectAllValuesFrom) right).getProperty();
 
 				// creating fresh concept
 				OWLClassExpression fresh = FreshAtoms.createFreshAtomCopy(filler);
