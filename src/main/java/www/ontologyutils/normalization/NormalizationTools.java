@@ -14,7 +14,10 @@ import org.semanticweb.owlapi.model.ClassExpressionType;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLFunctionalDataPropertyAxiom;
@@ -36,6 +39,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyDomainAxiomImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyRangeAxiomImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectSomeValuesFromImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectUnionOfImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLQuantifiedDataRestrictionImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLQuantifiedRestrictionImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLSubClassOfAxiomImpl;
 
@@ -111,10 +115,14 @@ public class NormalizationTools {
 			subClassOfAxioms = Collections.singleton(((OWLSubClassOfAxiomShortCut) ax).asOWLSubClassOfAxiom());
 		} else if (ax.isOfType(AxiomType.FUNCTIONAL_DATA_PROPERTY)) {
 			subClassOfAxioms = Collections.singleton(((OWLFunctionalDataPropertyAxiom) ax).asOWLSubClassOfAxiom());
-		} 	
-		else {
+		}
+		/*else {
 			throw new RuntimeException("The axiom " + ax + " of type " + ax.getAxiomType()
 					+ " could not be converted into subclass axioms.");
+		}*/
+		
+		else {
+			System.out.println("Do nothing with: " + ax.getAxiomType() + " could not be converted into subclass axioms.");
 		}
 		
 		// we add an annotation to each axiom referring to the original axiom in parameter
@@ -305,7 +313,20 @@ public class NormalizationTools {
 				OWLSubClassOfAxiom sbaFillerFresh = new OWLSubClassOfAxiomImpl(filler, fresh, AnnotateOrigin.getAxiomAnnotations(currentAxiom));
 				axioms.add(sbaFillerFresh);
 			}
+			
+			// If left or right is existential (data)
 
+			else if ((left.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM)
+					&& !NormalForm.isExistentialOfData(left)) { // left existential atom is fine
+				// left = exists dataproperty datatype
+				throw new RuntimeException("I don't know what to do with " + ax + "maybe axioms include composed datatypes");
+				
+			} else if ((right.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM)
+					&& !NormalForm.isExistentialOfAtom(right)) { // right existential atom is fine
+				// right = exists property filler
+				throw new RuntimeException("I don't know what to do with " + ax + "maybe axioms include composed datatypes");
+				
+			}
 			// If left or right is universal
 
 			else if ((left.getClassExpressionType() == ClassExpressionType.OBJECT_ALL_VALUES_FROM)) {
@@ -334,8 +355,13 @@ public class NormalizationTools {
 				// we add filler -> fresh
 				OWLSubClassOfAxiom sbaFillerFresh = new OWLSubClassOfAxiomImpl(filler, fresh, AnnotateOrigin.getAxiomAnnotations(currentAxiom));
 				axioms.add(sbaFillerFresh);
-			} else {
+			} 
+			/* else {
 				throw new RuntimeException("I don't know what to do with " + ax);
+			}*/
+			
+			else {
+				System.out.println("Do nothing with: " + ax);
 			}
 
 		} // end while

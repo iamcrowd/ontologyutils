@@ -115,7 +115,7 @@ public class AppNormalize {
 		System.out.println("\nNAIVE NORMALIZATION");
 		OWLOntology naive = mApp.runNaive();
 
-		System.out.println("\nTo rules");
+/*		System.out.println("\nTo rules");
 		RuleGeneration rgn = new RuleGeneration(naive);
 		rgn.getMapEntities().entrySet().stream()
 			.forEach(e -> System.out.println(rgn.entityToRule(e.getKey())));
@@ -138,7 +138,7 @@ public class AppNormalize {
 
 		System.out.println("\nwhere");
 		rgc.getMapEntities().entrySet().stream()
-				.forEach(e -> System.out.println(e.getValue() + "\t\t" + Utils.pretty(e.getKey().toString())));
+				.forEach(e -> System.out.println(e.getValue() + "\t\t" + Utils.pretty(e.getKey().toString())));*/
 
 		///////////////////////////////////////////////////////////////////////////////////
 

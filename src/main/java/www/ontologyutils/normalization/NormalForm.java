@@ -6,9 +6,13 @@ import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.ClassExpressionType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
+import uk.ac.manchester.cs.owl.owlapi.OWLDataMaxCardinalityImpl;
+
 import uk.ac.manchester.cs.owl.owlapi.OWLQuantifiedRestrictionImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLCardinalityRestrictionImpl;
 
 /**
  * @author nico
@@ -35,8 +39,24 @@ public class NormalForm {
 		OWLClassExpression left = ((OWLSubClassOfAxiom) ax).getSubClass();
 		OWLClassExpression right = ((OWLSubClassOfAxiom) ax).getSuperClass();
 
-		if (typeOneSubClassAxiom(left, right) || typeTwoSubClassAxiom(left, right)
-				|| typeThreeSubClassAxiom(left, right) || typeFourSubClassAxiom(left, right)) {
+		if (typeOneSubClassAxiom(left, right) 	||
+				
+			typeTwoSubClassAxiom(left, right) 	||
+			typeTwoMinCardAxiom(left, right) ||
+			typeTwoMaxCardAxiom(left, right) ||
+			typeTwoExactCardAxiom(left, right) ||
+			
+			typeTwoDataSubClassAxiom(left, right) ||
+			typeTwoDataMinCardAxiom(left, right) ||
+			typeTwoDataMaxCardAxiom(left, right) ||
+			typeTwoDataExactCardAxiom(left, right) ||
+			
+			typeThreeSubClassAxiom(left, right) || 
+			typeThreeDataSubClassAxiom(left, right) ||
+			
+			typeFourSubClassAxiom(left, right) 	||
+			typeFourDataSubClassAxiom(left, right)
+			) {
 			return true;
 		}
 
@@ -212,15 +232,17 @@ public class NormalForm {
 	 * 
 	 * @param e
 	 * @return
+	 * @implNote This function does not consider composed fillers. They can be only Datatypes
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean isExistentialOfData(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM)) {
 			return false;
 		}
+		
+		OWLDataRange filler = ((OWLQuantifiedRestrictionImpl<OWLDataRange>) e).getFiller();
 
-		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
-
-		if (!isAtom(filler)) {
+		if (!filler.isOWLDatatype()) {
 			return false;
 		}
 		return true;
@@ -232,13 +254,15 @@ public class NormalForm {
 	 * 
 	 * @param e
 	 * @return
+	 * @implNote This function does not consider composed fillers. They can be only Datatypes
 	 */
 	public static boolean isMinCardinalityOfAtom(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY)) {
 			return false;
 		}
 
-		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+		@SuppressWarnings("unchecked")
+		OWLClassExpression filler = ((OWLCardinalityRestrictionImpl<OWLClassExpression>) e).getFiller();
 
 		if (!isAtom(filler)) {
 			return false;
@@ -251,13 +275,15 @@ public class NormalForm {
 	 * 
 	 * @param e
 	 * @return
+	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean isMaxCardinalityOfAtom(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_MAX_CARDINALITY)) {
 			return false;
 		}
 
-		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+		OWLClassExpression filler = ((OWLCardinalityRestrictionImpl<OWLClassExpression>) e).getFiller();
 
 		if (!isAtom(filler)) {
 			return false;
@@ -271,12 +297,13 @@ public class NormalForm {
 	 * @param e
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean isExactCardinalityOfAtom(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY)) {
 			return false;
 		}
 
-		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+		OWLClassExpression filler = ((OWLCardinalityRestrictionImpl<OWLClassExpression>) e).getFiller();
 
 		if (!isAtom(filler)) {
 			return false;
@@ -289,15 +316,17 @@ public class NormalForm {
 	 * 
 	 * @param e
 	 * @return
+	 * @implNote This function does not consider composed fillers. They can be only Datatypes
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean isDataMinCardinalityOfAtom(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.DATA_MIN_CARDINALITY)) {
 			return false;
 		}
 
-		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+		OWLDataRange filler = ((OWLCardinalityRestrictionImpl<OWLDataRange>) e).getFiller();
 
-		if (!isAtom(filler)) {
+		if (!filler.isOWLDatatype()) {
 			return false;
 		}
 		return true;
@@ -308,15 +337,17 @@ public class NormalForm {
 	 * 
 	 * @param e
 	 * @return
+	 * @implNote This function does not consider composed fillers. They can be only Datatypes
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean isDataMaxCardinalityOfAtom(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY)) {
 			return false;
 		}
+		
+		OWLDataRange filler = ((OWLCardinalityRestrictionImpl<OWLDataRange>) e).getFiller();
 
-		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
-
-		if (!isAtom(filler)) {
+		if (!filler.isOWLDatatype()) {
 			return false;
 		}
 		return true;
@@ -327,15 +358,17 @@ public class NormalForm {
 	 * 
 	 * @param e
 	 * @return
+	 * @implNote This function does not consider composed fillers. They can be only Datatypes
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean isDataExactCardinalityOfAtom(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY)) {
 			return false;
 		}
 
-		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
+		OWLDataRange filler = ((OWLCardinalityRestrictionImpl<OWLDataRange>) e).getFiller();
 
-		if (!isAtom(filler)) {
+		if (!filler.isOWLDatatype()) {
 			return false;
 		}
 		return true;
@@ -360,15 +393,17 @@ public class NormalForm {
 	 * 
 	 * @param e
 	 * @return
+	 * @implNote This function does not consider composed fillers. They can be only Datatypes
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean isUniversalOfData(OWLClassExpression e) {
 		if (!(e.getClassExpressionType() == ClassExpressionType.DATA_ALL_VALUES_FROM)) {
 			return false;
 		}
+		
+		OWLDataRange filler = ((OWLQuantifiedRestrictionImpl<OWLDataRange>) e).getFiller();
 
-		OWLClassExpression filler = ((OWLQuantifiedRestrictionImpl<OWLClassExpression>) e).getFiller();
-
-		if (!isAtom(filler)) {
+		if (!filler.isOWLDatatype()) {
 			return false;
 		}
 		return true;
