@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.OWLObjectComplementOf;
 
 import uk.ac.manchester.cs.owl.owlapi.OWLDataMaxCardinalityImpl;
 
@@ -68,7 +69,18 @@ public class NormalForm {
 	}
 
 	/**
-	 * subclass(atom, exists property atom)
+	 * Check (atom, negation atom) CIs
+	 * 
+	 * @param left an OWLClassExpression
+	 * @param right an OWLClassExpression
+	 * @return
+	 */
+	public static boolean complementExpression(OWLClassExpression left, OWLClassExpression right) {
+		return ((isAtom(left) && isComplementOfAtoms(right)));
+	}
+
+	/**
+	 * Subclass(atom, exists property atom)
 	 * 
 	 * @param left
 	 * @param right
@@ -79,7 +91,7 @@ public class NormalForm {
 	}
 	
 	/**
-	 * subclass(atom, exists dataproperty atom)
+	 * Subclass(atom, exists dataproperty atom)
 	 * 
 	 * @param left
 	 * @param right
@@ -212,6 +224,25 @@ public class NormalForm {
 		}
 		return true;
 	}
+
+	/**
+	 * Check if e is an object complement expression
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isComplementOfAtoms(OWLClassExpression e) {
+		if (!(e.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF)) {
+			return false;
+		}
+		
+		OWLClassExpression complement = ((OWLObjectComplementOf) e).getOperand();
+
+		if (isAtom(complement)) {
+				return true;
+		}
+		return false;
+	}	
 
 	@SuppressWarnings("unchecked")
 	public static boolean isExistentialOfAtom(OWLClassExpression e) {
