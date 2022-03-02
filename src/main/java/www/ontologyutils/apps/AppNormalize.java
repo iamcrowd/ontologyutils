@@ -14,7 +14,6 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 import www.ontologyutils.normalization.Normalization;
 import www.ontologyutils.normalization.NormalizationTools;
-import www.ontologyutils.rules.RuleGeneration;
 import www.ontologyutils.toolbox.FreshAtoms;
 import www.ontologyutils.toolbox.Utils;
 
